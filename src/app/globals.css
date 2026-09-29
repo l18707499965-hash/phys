@@ -135,3 +135,104 @@
 body {
   @apply font-sans;
 }
+
+/* ===== 飘花影视 · 品牌定制样式 ===== */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 品牌渐变文字（青蓝→紫，呼应 logo） */
+.text-brand-gradient {
+  background: linear-gradient(110deg, #06b6d4 0%, #3b82f6 45%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.bg-brand-gradient {
+  background: linear-gradient(110deg, #06b6d4 0%, #3b82f6 45%, #8b5cf6 100%);
+}
+.bg-brand-gradient-soft {
+  background: linear-gradient(135deg, #e0f2fe 0%, #e0e7ff 40%, #f5f3ff 100%);
+}
+
+/* 主下载按钮柔和彩色投影与悬浮光晕 */
+.btn-download-glow {
+  box-shadow: 0 12px 30px -8px rgba(124, 92, 252, 0.55);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-download-glow:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 18px 44px -10px rgba(124, 92, 252, 0.7);
+}
+
+/* 漂浮花瓣/光斑动效 */
+@keyframes petal-float {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(300deg);
+    opacity: 0;
+  }
+}
+.petal {
+  position: absolute;
+  bottom: -40px;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px 6px 9999px 6px;
+  filter: blur(0.2px);
+  animation-name: petal-float;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-14px) translateX(8px);
+  }
+}
+.animate-float-slow {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 26s linear infinite;
+}
+
+/* 卡片悬浮上浮 */
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .petal,
+  .animate-float-slow,
+  .animate-spin-slow {
+    animation: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

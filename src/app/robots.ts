@@ -1,4 +1,7 @@
 import { MetadataRoute } from 'next';
+import { siteConfig } from '@/lib/site';
+
+const baseUrl = siteConfig.url.replace(/\/$/, '');
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,5 +10,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/', '/_next/', '/static/'],
     },
+    sitemap: `${baseUrl}/sitemap.xml`,
+    host: baseUrl,
   };
 }

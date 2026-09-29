@@ -1,65 +1,41 @@
-# 项目上下文
+# AGENTS.md
 
-### 版本技术栈
+## 项目概览
+飘花影视（Android 高清影视播放 App）官方网站。多页面、SEO 优化、面向百度/谷歌/必应，突出下载转化。
 
-- **Framework**: Next.js 16 (App Router)
-- **Core**: React 19
-- **Language**: TypeScript 5
-- **UI 组件**: shadcn/ui (基于 Radix UI)
-- **Styling**: Tailwind CSS 4
+- 主入口：首页 + 下载中心（安卓 APK 下载）
+- 内容：功能特色、使用教程（文章列表/详情）、常见问题、关于、联系
+- 品牌视觉：蝴蝶×胶片 logo，马卡龙渐变（青蓝→蓝→紫→粉），轻盈清新，见 `DESIGN.md`。
+
+## 技术栈
+- Next.js 16（App Router）、React 19、TypeScript 5（strict）
+- Tailwind CSS 4、shadcn/ui（`src/components/ui/`）
+
+## 常用命令（仅 pnpm）
+- 开发：`pnpm dev`（内部走 `scripts/dev.sh`，读 `DEPLOY_RUN_PORT` 决定端口，默认 5000）
+- 构建：`pnpm build`（`scripts/build.sh`）　启动：`pnpm start`（`scripts/start.sh`）
+- 检查：`pnpm ts-check`、`pnpm lint`／`pnpm validate`
 
 ## 目录结构
-
 ```
-├── public/                 # 静态资源
-├── scripts/                # 构建与启动脚本
-│   ├── build.sh            # 构建脚本
-│   ├── dev.sh              # 开发环境启动脚本
-│   ├── prepare.sh          # 预处理脚本
-│   └── start.sh            # 生产环境启动脚本
-├── src/
-│   ├── app/                # 页面路由与布局
-│   ├── components/ui/      # Shadcn UI 组件库
-│   ├── hooks/              # 自定义 Hooks
-│   ├── lib/                # 工具库
-│   │   └── utils.ts        # 通用工具函数 (cn)
-│   └── server.ts           # 自定义服务端入口
-├── next.config.ts          # Next.js 配置
-├── package.json            # 项目依赖管理
-└── tsconfig.json           # TypeScript 配置
+src/
+  app/                 # 路由（layout/首页/下载/功能/教程/常见问题/关于/联系 + sitemap/robots/manifest）
+  components/          # Header/Footer/Logo/Petals/PageHero/DownloadCta/DownloadButton + ui/
+  lib/                 # site.ts 站点配置 · guides.ts 教程文章数据
+  types/global.d.ts    # window 全局类型声明
+public/
+  logo.png             # 品牌 logo
+DESIGN.md              # 设计规范（改样式前先读）
 ```
 
-- 项目文件（如 app 目录、pages 目录、components 等）默认初始化到 `src/` 目录下。
+## 关键约定
+- **站点配置集中在 `src/lib/site.ts`**：路径新增页面时同步更新 `siteConfig.nav`、`footerNav`、`sitemap.ts`。
+- **下载链路统一走 `DownloadButton`**：href 保持 APK 原始链接，按钮带 `data-stat-id`（`siteConfig.statId`），点击推送 `dataLayer` 事件；统计 ID 变更只改 `site.ts`。
+- **绝对 URL 一律用 `process.env.COZE_PROJECT_DOMAIN_DEFAULT`**（经 `siteConfig.url`），禁止硬编码域名/localhost。
+- canonical/openGraph/JSON-LD 已按页面配置；新增页面需补 `metadata`（title/description/canonical）与合适的结构化数据（Article/FAQPage/BreadcrumbList）。
+- 设计规范与配色见 `DESIGN.md`，改 UI 前先阅读。
 
-## 包管理规范
-
-**仅允许使用 pnpm** 作为包管理器，**严禁使用 npm 或 yarn**。
-**常用命令**：
-- 安装依赖：`pnpm add <package>`
-- 安装开发依赖：`pnpm add -D <package>`
-- 安装所有依赖：`pnpm install`
-- 移除依赖：`pnpm remove <package>`
-
-## 开发规范
-
-### 编码规范
-
-- 默认按 TypeScript `strict` 心智写代码；优先复用当前作用域已声明的变量、函数、类型和导入，禁止引用未声明标识符或拼错变量名。
-- 禁止隐式 `any` 和 `as any`；函数参数、返回值、解构项、事件对象、`catch` 错误在使用前应有明确类型或先完成类型收窄，并清理未使用的变量和导入。
-
-### next.config 配置规范
-
-- 配置的路径不要写死绝对路径，必须使用 path.resolve(__dirname, ...)、import.meta.dirname 或 process.cwd() 动态拼接。
-
-### Hydration 问题防范
-
-1. 严禁在 JSX 渲染逻辑中直接使用 typeof window、Date.now()、Math.random() 等动态数据。**必须使用 'use client' 并配合 useEffect + useState 确保动态内容仅在客户端挂载后渲染**；同时严禁非法 HTML 嵌套（如 <p> 嵌套 <div>）。
-2. **禁止使用 head 标签**，优先使用 metadata，详见文档：https://nextjs.org/docs/app/api-reference/functions/generate-metadata
-   1. 三方 CSS、字体等资源可在 `globals.css` 中顶部通过 `@import` 引入或使用 next/font
-   2. preload, preconnect, dns-prefetch 通过 ReactDOM 的 preload、preconnect、dns-prefetch 方法引入
-   3. json-ld 可阅读 https://nextjs.org/docs/app/guides/json-ld
-
-## UI 设计与组件规范 (UI & Styling Standards)
-
-- 模板默认预装核心组件库 `shadcn/ui`，位于`src/components/ui/`目录下
-- Next.js 项目**必须默认**采用 shadcn/ui 组件、风格和规范，**除非用户指定用其他的组件和规范。**
+## 注意事项
+- 必须用 pnpm，禁止 npm/yarn；`preinstall` 已用 only-allow 强制。
+- 禁止在 JSX 里使用 Date.now()/Math.random()/typeof window；动态内容用客户端组件 + useEffect。
+- 内部页面跳转用 `next/link` 的 `Link`，不要用 `<a>`（eslint `no-html-link-for-pages`）。
