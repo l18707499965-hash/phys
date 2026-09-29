@@ -7,7 +7,7 @@ import { siteConfig } from '@/lib/site';
 const baseUrl = siteConfig.url.replace(/\/$/, '');
 
 export const metadata: Metadata = {
-  title: '关于我们 - 飘花影视官方团队',
+  title: '关于我们 - 官方团队介绍',
   description:
     '了解飘花影视：我们致力于为用户提供高清、流畅、免费的影视播放体验，持续扩充片库、打磨产品，让每一份热爱都有处安放。',
   alternates: { canonical: `${baseUrl}/about` },

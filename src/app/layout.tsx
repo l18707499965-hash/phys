@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
     default: '飘花影视 - 高清影视播放App，免费畅享海量影视资源',
-    template: '%s | 飘花影视官方网站',
+    template: '飘花影视 | %s',
   },
   description: siteConfig.description,
   keywords: siteConfig.keywords,

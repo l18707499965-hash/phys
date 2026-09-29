@@ -17,7 +17,7 @@ import { siteConfig } from '@/lib/site';
 const baseUrl = siteConfig.url.replace(/\/$/, '');
 
 export const metadata: Metadata = {
-  title: '飘花影视安卓版下载 - 官方免费下载通道',
+  title: '安卓版免费下载 - 官方下载通道',
   description:
     '飘花影视安卓版官方下载页面。提供飘花影视 APK 最新版免费下载，海量影视资源、高清蓝光画质、极速流畅播放，安全无绑定，安装即享。',
   alternates: { canonical: `${baseUrl}/download` },
